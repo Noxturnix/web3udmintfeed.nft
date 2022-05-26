@@ -10,7 +10,7 @@
   let transactionExplorerUrl = explorerUrl + "/tx/" + feed.transactionHash;
   let addressExporerUrl = explorerUrl + "/address/" + feed.owner;
   let unstoppableDomainUrl =
-    "https://unstoppabledomains.com/search?searchTerm=" + encodeURIComponent(feed.uri);
+    "https://ud.me/" + encodeURIComponent(feed.uri);
   let shortAddr = (addr: string) => addr.substring(0, 6) + "..." + addr.substring(addr.length - 4);
   let randomElementId = "feed-" + Math.random().toString(36).substring(2);
   let feedElement: HTMLAnchorElement;
