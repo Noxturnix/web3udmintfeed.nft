@@ -31,5 +31,8 @@
     "typescript": "^4.4.3"
   },
   "type": "module",
-  "license": "Unlicense"
+  "license": "Unlicense",
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
 }

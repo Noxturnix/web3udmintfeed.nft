@@ -11,6 +11,7 @@
     ethereumResolverContract
   } from "$lib/web3connection";
   import Feed from "$lib/Feed.svelte";
+  import { lookupDomainFromTokenId } from "$lib/udTool";
 
   let feedEverLoaded = false;
   let polygonBlockNumber: number;
@@ -34,7 +35,7 @@
           ? polygonResolverContract(resolverAddress)
           : ethereumResolverContract(resolverAddress);
 
-      let domainOwner: string;
+      let domainOwnerAddress: string;
       let domainOwnerFetchRetryCount = 0;
       while (true) {
         if (domainOwnerFetchRetryCount >= 60) {
@@ -42,14 +43,22 @@
           return;
         }
         try {
-          domainOwner = await resolverContract.ownerOf(tokenId);
+          domainOwnerAddress = await resolverContract.ownerOf(tokenId);
           break;
         } catch (error) {
           await new Promise((resolve) => setTimeout(resolve, 2e3));
         }
         domainOwnerFetchRetryCount++;
       }
-      let domainOwnerName = await ethereumProvider.lookupAddress(domainOwner);
+
+      let domainOwnerReverseResolutionTokenId = await resolverContract.reverseOf(
+        domainOwnerAddress
+      );
+      let domainOwnerName = domainOwnerReverseResolutionTokenId.eq(0)
+        ? null
+        : await lookupDomainFromTokenId(domainOwnerReverseResolutionTokenId);
+      domainOwnerName =
+        domainOwnerName || (await ethereumProvider.lookupAddress(domainOwnerAddress));
 
       knownDomainId.push(tokenId.toString());
       knownDomainId = knownDomainId.slice(-100);
@@ -63,7 +72,7 @@
             tokenId: tokenId,
             uri: uri,
             blockchain,
-            owner: domainOwner,
+            owner: domainOwnerAddress,
             ownerName: domainOwnerName,
             transactionHash: event.transactionHash
           }

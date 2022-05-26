@@ -10,7 +10,8 @@ export const unsRegistryAbi = [
   "function resolverOf(uint256 tokenId) external view returns (address)"
 ];
 export const unsResolverAbi = [
-  "function ownerOf(uint256 tokenId) external view returns (address owner)"
+  "function ownerOf(uint256 tokenId) external view returns (address owner)",
+  "function reverseOf(address addr) external view returns (uint256)"
 ];
 
 export const polygonProvider = new ethers.providers.JsonRpcProvider(polygonRPC);
