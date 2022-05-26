@@ -5,8 +5,10 @@
     polygonProvider,
     polygonContractAddress,
     polygonRegistryContract,
+    polygonResolverContract,
     ethereumProvider,
-    ethereumRegistryContract
+    ethereumRegistryContract,
+    ethereumResolverContract
   } from "$lib/web3connection";
   import Feed from "$lib/Feed.svelte";
 
@@ -26,6 +28,11 @@
         event.address === polygonContractAddress ? "polygon" : "ethereum";
       let registryContract =
         blockchain === "polygon" ? polygonRegistryContract : ethereumRegistryContract;
+      let resolverAddress: string = await registryContract.resolverOf(tokenId);
+      let resolverContract =
+        blockchain === "polygon"
+          ? polygonResolverContract(resolverAddress)
+          : ethereumResolverContract(resolverAddress);
 
       let domainOwner: string;
       let domainOwnerFetchRetryCount = 0;
@@ -35,7 +42,7 @@
           return;
         }
         try {
-          domainOwner = await registryContract.ownerOf(tokenId);
+          domainOwner = await resolverContract.ownerOf(tokenId);
           break;
         } catch (error) {
           await new Promise((resolve) => setTimeout(resolve, 2e3));
