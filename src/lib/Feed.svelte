@@ -1,16 +1,16 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { UDDomain } from "./UDDomain";
+  import type { IFeed } from "./IFeed";
   import anime from "animejs";
 
-  export let domain: UDDomain;
+  export let feed: IFeed;
 
   let explorerUrl =
-    domain.blockchain === "polygon" ? "https://polygonscan.com" : "https://etherscan.io";
-  let transactionExplorerUrl = explorerUrl + "/tx/" + domain.transactionHash;
-  let addressExporerUrl = explorerUrl + "/address/" + domain.owner;
+    feed.blockchain === "polygon" ? "https://polygonscan.com" : "https://etherscan.io";
+  let transactionExplorerUrl = explorerUrl + "/tx/" + feed.transactionHash;
+  let addressExporerUrl = explorerUrl + "/address/" + feed.owner;
   let unstoppableDomainUrl =
-    "https://unstoppabledomains.com/search?searchTerm=" + encodeURIComponent(domain.uri);
+    "https://unstoppabledomains.com/search?searchTerm=" + encodeURIComponent(feed.uri);
   let shortAddr = (addr: string) => addr.substring(0, 6) + "..." + addr.substring(addr.length - 4);
   let randomElementId = "feed-" + Math.random().toString(36).substring(2);
   let feedElement: HTMLAnchorElement;
@@ -74,13 +74,13 @@
   <span
     ><a
       class="font-semibold hover:underline"
-      title={domain.owner}
+      title={feed.owner}
       href={addressExporerUrl}
-      target="_blank">{shortAddr(domain.owner)}</a
+      target="_blank">{feed.ownerName || shortAddr(feed.owner)}</a
     >
     minted
     <a class="font-semibold hover:underline" href={unstoppableDomainUrl} target="_blank"
-      >{domain.uri}</a
+      >{feed.uri}</a
     ></span
   >
 </a>

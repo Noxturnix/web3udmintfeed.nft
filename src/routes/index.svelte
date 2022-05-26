@@ -49,6 +49,7 @@
         }
         domainOwnerFetchRetryCount++;
       }
+      let domainOwnerName = await ethereumProvider.lookupAddress(domainOwner);
 
       knownDomainId.push(tokenId.toString());
       knownDomainId = knownDomainId.slice(-100);
@@ -58,11 +59,12 @@
       new Feed({
         target: mintFeed,
         props: {
-          domain: {
+          feed: {
             tokenId: tokenId,
             uri: uri,
             blockchain,
             owner: domainOwner,
+            ownerName: domainOwnerName,
             transactionHash: event.transactionHash
           }
         }
